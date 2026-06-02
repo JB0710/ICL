@@ -8,8 +8,9 @@ $mariadbDir = "$targetDir\mariadb"
 $appDir = "$targetDir\www"
 $pmaDir = "$appDir\phpmyadmin"
 $tempDir = "$targetDir\temp"
+$tempPort = 3307
 
-# URLs for components (Note: These might need updating over time)
+# URLs for components
 $phpUrl = "https://windows.php.net/downloads/releases/php-8.3.6-Win32-vs16-x64.zip"
 $mariadbUrl = "https://archive.mariadb.org/mariadb-11.4.2/winx64-packages/mariadb-11.4.2-winx64.zip"
 $pmaUrl = "https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.zip"
@@ -30,7 +31,6 @@ function Download-And-Extract {
     Write-Host "Extracting to $destination..."
     Expand-Archive -Path $zipFile -DestinationPath $tempDir -Force
 
-    # Move extracted folder content to destination
     $extractedFolder = Get-ChildItem -Path $tempDir -Directory | Where-Object { $zipFile -like "*$($_.Name)*" -or $_.Name -like "phpMyAdmin*" } | Select-Object -First 1
     if ($extractedFolder) {
         Copy-Item -Path "$($extractedFolder.FullName)\*" -Destination $destination -Recurse -Force
@@ -63,19 +63,40 @@ if (!(Test-Path "$mariadbDir\data")) {
     Start-Process -FilePath $mariadbInstallDb -ArgumentList "--datadir=$mariadbDir\data" -Wait
 }
 
-# Start MariaDB temporarily to create DB and Table
-Write-Host "Starting MariaDB to initialize database..."
+# Start MariaDB temporarily on a custom port to initialize database
+Write-Host "Starting MariaDB on port $tempPort to initialize database..."
 $mysqld = "$mariadbDir\bin\mysqld.exe"
-$mysqlProcess = Start-Process -FilePath $mysqld -ArgumentList "--datadir=$mariadbDir\data", "--skip-grant-tables" -PassThru
-Start-Sleep -Seconds 5
+$mysqlProcess = Start-Process -FilePath $mysqld -ArgumentList "--datadir=$mariadbDir\data", "--port=$tempPort", "--skip-grant-tables", "--console" -PassThru -NoNewWindow
+$retryCount = 0
+$maxRetries = 15
+$portFound = $false
 
-$mysqlExe = "$mariadbDir\bin\mariadb.exe"
-Write-Host "Creating database and tables..."
-$schemaPath = Join-Path (Get-Location) "schema.sql"
-Start-Process -FilePath $mysqlExe -ArgumentList "-e ""CREATE DATABASE IF NOT EXISTS fuel_tracker;""" -Wait
-Start-Process -FilePath $mysqlExe -ArgumentList "fuel_tracker < `"$schemaPath`"" -Wait
+while ($retryCount -lt $maxRetries -and -not $portFound) {
+    Write-Host "Waiting for MariaDB to start (Attempt $($retryCount + 1))..."
+    if (Test-NetConnection -ComputerName localhost -Port $tempPort -InformationLevel Quiet) {
+        $portFound = $true
+    } else {
+        $retryCount++
+        Start-Sleep -Seconds 2
+    }
+}
 
-Stop-Process -Id $mysqlProcess.Id -Force
+if ($portFound) {
+    $mysqlExe = "$mariadbDir\bin\mariadb.exe"
+    Write-Host "Creating database and tables..."
+    $schemaPath = Join-Path (Get-Location) "schema.sql"
+    & $mysqlExe -P $tempPort -u root -e "CREATE DATABASE IF NOT EXISTS fuel_tracker;"
+    & $mysqlExe -P $tempPort -u root fuel_tracker < "$schemaPath"
+    Write-Host "Database initialization complete."
+} else {
+    Write-Error "Could not connect to MariaDB on port $tempPort after $maxRetries attempts."
+}
+
+# Cleanly stop MariaDB
+if ($mysqlProcess -and !( $mysqlProcess.HasExited )) {
+    Write-Host "Stopping temporary MariaDB process..."
+    Stop-Process -Id $mysqlProcess.Id -Force -ErrorAction SilentlyContinue
+}
 
 # 5. Copy Application Files
 Write-Host "Copying application files..."
