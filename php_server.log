@@ -1,0 +1,13 @@
+[Tue Jun  2 13:29:12 2026] PHP 8.3.6 Development Server (http://localhost:8080) started
+[Tue Jun  2 13:29:32 2026] [::1]:50858 Accepted
+[Tue Jun  2 13:29:32 2026] [::1]:50858 [200]: GET /index_mock.php
+[Tue Jun  2 13:29:32 2026] [::1]:50858 Closing
+[Tue Jun  2 13:29:32 2026] [::1]:50866 Accepted
+[Tue Jun  2 13:29:32 2026] [::1]:50866 [200]: GET /css/style.css
+[Tue Jun  2 13:29:32 2026] [::1]:50866 Closing
+[Tue Jun  2 13:29:32 2026] [::1]:50870 Accepted
+[Tue Jun  2 13:29:32 2026] [::1]:50870 [200]: GET /add_mock.php
+[Tue Jun  2 13:29:32 2026] [::1]:50870 Closing
+[Tue Jun  2 13:29:32 2026] [::1]:50884 Accepted
+[Tue Jun  2 13:29:32 2026] [::1]:50884 [200]: GET /css/style.css
+[Tue Jun  2 13:29:32 2026] [::1]:50884 Closing
