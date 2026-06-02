@@ -1,5 +1,5 @@
 # Fuel Tracker Windows Offline Setup Script
-# This script configures PHP, MariaDB, and phpMyAdmin for the Fuel Tracker app.
+# This script downloads, installs, and configures PHP, MariaDB, and phpMyAdmin.
 # Target Directory: C:\IT\Apps\FuelTracker
 
 $targetDir = "C:\IT\Apps\FuelTracker"
@@ -7,27 +7,46 @@ $phpDir = "$targetDir\php"
 $mariadbDir = "$targetDir\mariadb"
 $appDir = "$targetDir\www"
 $pmaDir = "$appDir\phpmyadmin"
+$tempDir = "$targetDir\temp"
 
-Write-Host "Starting Fuel Tracker Setup..." -ForegroundColor Cyan
+# URLs for components (Note: These might need updating over time)
+$phpUrl = "https://windows.php.net/downloads/releases/php-8.3.6-Win32-vs16-x64.zip"
+$mariadbUrl = "https://archive.mariadb.org/mariadb-11.4.2/winx64-packages/mariadb-11.4.2-winx64.zip"
+$pmaUrl = "https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.zip"
+
+Write-Host "Starting Fuel Tracker Full Setup..." -ForegroundColor Cyan
 
 # 1. Create Directory Structure
-if (!(Test-Path $targetDir)) {
-    New-Item -ItemType Directory -Path $targetDir | Out-Null
-}
+if (!(Test-Path $targetDir)) { New-Item -ItemType Directory -Path $targetDir | Out-Null }
+if (!(Test-Path $tempDir)) { New-Item -ItemType Directory -Path $tempDir | Out-Null }
 
-foreach ($dir in @($phpDir, $mariadbDir, $appDir, $pmaDir)) {
-    if (!(Test-Path $dir)) {
-        New-Item -ItemType Directory -Path $dir | Out-Null
+function Download-And-Extract {
+    param($url, $destination)
+    $zipFile = Join-Path $tempDir (Split-Path $url -Leaf)
+    if (!(Test-Path $zipFile)) {
+        Write-Host "Downloading $(Split-Path $url -Leaf)..."
+        Invoke-WebRequest -Uri $url -OutFile $zipFile
+    }
+    Write-Host "Extracting to $destination..."
+    Expand-Archive -Path $zipFile -DestinationPath $tempDir -Force
+
+    # Move extracted folder content to destination
+    $extractedFolder = Get-ChildItem -Path $tempDir -Directory | Where-Object { $zipFile -like "*$($_.Name)*" -or $_.Name -like "phpMyAdmin*" } | Select-Object -First 1
+    if ($extractedFolder) {
+        Copy-Item -Path "$($extractedFolder.FullName)\*" -Destination $destination -Recurse -Force
+        Remove-Item -Path $extractedFolder.FullName -Recurse -Force
     }
 }
 
-# 2. Configure PHP
+# 2. Download and Extract Components
+if (!(Test-Path $phpDir)) { New-Item -ItemType Directory -Path $phpDir | Out-Null; Download-And-Extract $phpUrl $phpDir }
+if (!(Test-Path $mariadbDir)) { New-Item -ItemType Directory -Path $mariadbDir | Out-Null; Download-And-Extract $mariadbUrl $mariadbDir }
+if (!(Test-Path $pmaDir)) { New-Item -ItemType Directory -Path $pmaDir | Out-Null; Download-And-Extract $pmaUrl $pmaDir }
+
+# 3. Configure PHP
 $phpIni = "$phpDir\php.ini"
 if (Test-Path "$phpDir\php.ini-development") {
-    if (!(Test-Path $phpIni)) {
-        Copy-Item "$phpDir\php.ini-development" $phpIni
-    }
-
+    Copy-Item "$phpDir\php.ini-development" $phpIni -Force
     Write-Host "Configuring php.ini..."
     $content = Get-Content $phpIni
     $content = $content -replace ';extension_dir = "ext"', 'extension_dir = "ext"'
@@ -35,27 +54,38 @@ if (Test-Path "$phpDir\php.ini-development") {
     $content = $content -replace ';extension=mysqli', 'extension=mysqli'
     $content = $content -replace ';extension=mbstring', 'extension=mbstring'
     $content | Set-Content $phpIni
-} else {
-    Write-Warning "php.ini-development not found in $phpDir. Please ensure PHP binaries are present."
 }
 
-# 3. Database Initialization (MariaDB)
+# 4. Database Initialization
 $mariadbInstallDb = "$mariadbDir\bin\mariadb-install-db.exe"
-if (Test-Path $mariadbInstallDb) {
+if (!(Test-Path "$mariadbDir\data")) {
     Write-Host "Initializing MariaDB data directory..."
     Start-Process -FilePath $mariadbInstallDb -ArgumentList "--datadir=$mariadbDir\data" -Wait
 }
 
-# 4. Copy Application Files
+# Start MariaDB temporarily to create DB and Table
+Write-Host "Starting MariaDB to initialize database..."
+$mysqld = "$mariadbDir\bin\mysqld.exe"
+$mysqlProcess = Start-Process -FilePath $mysqld -ArgumentList "--datadir=$mariadbDir\data", "--skip-grant-tables" -PassThru
+Start-Sleep -Seconds 5
+
+$mysqlExe = "$mariadbDir\bin\mariadb.exe"
+Write-Host "Creating database and tables..."
+$schemaPath = Join-Path (Get-Location) "schema.sql"
+Start-Process -FilePath $mysqlExe -ArgumentList "-e ""CREATE DATABASE IF NOT EXISTS fuel_tracker;""" -Wait
+Start-Process -FilePath $mysqlExe -ArgumentList "fuel_tracker < `"$schemaPath`"" -Wait
+
+Stop-Process -Id $mysqlProcess.Id -Force
+
+# 5. Copy Application Files
 Write-Host "Copying application files..."
+if (!(Test-Path $appDir)) { New-Item -ItemType Directory -Path $appDir | Out-Null }
 $currentDir = Get-Location
 Copy-Item -Path "$currentDir\index.php", "$currentDir\add.php", "$currentDir\schema.sql", "$currentDir\README.md", "$currentDir\start_app.bat" -Destination $appDir -Force
 Copy-Item -Path "$currentDir\includes", "$currentDir\css" -Destination $appDir -Recurse -Force
 
-# 5. Configure phpMyAdmin (if files are present)
 if (Test-Path "$currentDir\phpmyadmin_config.inc.php") {
     Copy-Item -Path "$currentDir\phpmyadmin_config.inc.php" -Destination "$pmaDir\config.inc.php" -Force
 }
 
 Write-Host "Setup Complete!" -ForegroundColor Green
-Write-Host "Please ensure PHP, MariaDB, and phpMyAdmin binaries are placed in their respective folders."
