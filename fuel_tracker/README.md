@@ -6,37 +6,41 @@ A simple, self-hosted PHP website to track fuel consumption for a single vehicle
 - Dashboard with statistics: Total Distance (mi), Efficiency (MPG), Total Cost, Avg Price ($/gal).
 - Fueling History table.
 - Add Entry form.
-- Dark Mode support (automatic based on system settings).
+- Dark Mode support.
+- phpMyAdmin included for database management.
+
+## Downloads (Portable Versions)
+To run this offline, download the following components:
+- **PHP 8.x (Windows x64 Thread Safe)**: [https://windows.php.net/download/](https://windows.php.net/download/) (Download the "Zip" file)
+- **MariaDB (Windows x64 ZIP)**: [https://mariadb.org/download/](https://mariadb.org/download/) (Select "ZIP file" under Package Type)
+- **phpMyAdmin**: [https://www.phpmyadmin.net/downloads/](https://www.phpmyadmin.net/downloads/) (Download the "all-languages.zip")
 
 ## Windows Offline Installation (Standalone)
 
-To run this on an offline Windows computer at `C:\IT\Apps\FuelTracker`:
+Target Directory: `C:\IT\Apps\FuelTracker`
 
-1. **Prerequisites**:
-   - Download portable PHP for Windows.
-   - Download portable MariaDB for Windows.
-
-2. **Folder Structure**:
+1. **Folder Structure Setup**:
    - Create `C:\IT\Apps\FuelTracker`.
-   - Place PHP binaries in `C:\IT\Apps\FuelTracker\php`.
-   - Place MariaDB binaries in `C:\IT\Apps\FuelTracker\mariadb`.
-   - Place this application folder content in a temporary location.
+   - Extract PHP into `C:\IT\Apps\FuelTracker\php`.
+   - Extract MariaDB into `C:\IT\Apps\FuelTracker\mariadb`.
+   - Extract phpMyAdmin into this application's folder as a subfolder named `phpmyadmin` (so it becomes `.../fuel_tracker/phpmyadmin`).
 
-3. **Setup**:
+2. **Run Setup**:
    - Open PowerShell as Administrator.
-   - Navigate to the application folder.
+   - Navigate to the `fuel_tracker` application folder.
    - Run: `.\setup_windows.ps1`
-   - This script will configure `php.ini`, initialize the database, and move application files to `C:\IT\Apps\FuelTracker\www`.
+   - This script configures PHP, initializes the database, and moves everything to `C:\IT\Apps\FuelTracker\www`.
 
-4. **Running the App**:
-   - Double-click `start_app.bat` in `C:\IT\Apps\FuelTracker\www` (or your source folder).
-   - Open your browser to `http://localhost:8080`.
+3. **Running the App**:
+   - Run `C:\IT\Apps\FuelTracker\www\start_app.bat`.
+   - Application: [http://localhost:8080](http://localhost:8080)
+   - phpMyAdmin: [http://localhost:8080/phpmyadmin](http://localhost:8080/phpmyadmin)
 
 ## Manual Setup (Generic)
-1. **Database Setup**: Create a MySQL database `fuel_tracker` and run `schema.sql`.
-2. **Configuration**: Update `includes/db.php` with your credentials.
-3. **Deployment**: Place files in your web server's root.
+1. **Database**: Create `fuel_tracker` DB and run `schema.sql`.
+2. **Configuration**: Update `includes/db.php`.
+3. **Web Server**: Deploy files to your server's root.
 
 ## How to use
-- **First Entry**: Enter your current odometer reading and fill the tank.
-- **Subsequent Entries**: Enter the date, new odometer reading, gallons added, and the price per gallon.
+- **First Entry**: Enter current odometer reading and fill the tank.
+- **Subsequent Entries**: Enter date, new odometer, gallons added, and price per gallon.

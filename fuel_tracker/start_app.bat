@@ -14,5 +14,6 @@ timeout /t 5 /nobreak > nul
 
 :: Start PHP Web Server
 echo Starting Web Server at http://localhost:8080
+echo phpMyAdmin is available at http://localhost:8080/phpmyadmin
 cd /d "%APP_DIR%\www"
 "%PHP_BIN%" -S localhost:8080
