@@ -1,12 +1,13 @@
 <?php
 // Database configuration
 $host = 'localhost';
+$port = '3306';
 $db   = 'fuel_tracker';
 $user = 'root';
-$pass = '';
+$pass = 'T@nk5870!!';
 $charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -16,7 +17,5 @@ $options = [
 try {
      $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-     // For this self-hosted app, we will display error message if connection fails
-     // In production, you might want to log this instead.
      die("Database connection failed: " . $e->getMessage());
 }

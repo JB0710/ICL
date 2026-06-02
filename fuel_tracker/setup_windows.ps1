@@ -8,7 +8,8 @@ $mariadbDir = "$targetDir\mariadb"
 $appDir = "$targetDir\www"
 $pmaDir = "$appDir\phpmyadmin"
 $tempDir = "$targetDir\temp"
-$tempPort = 3307
+$dbPort = 3306
+$dbPass = "T@nk5870!!"
 
 # URLs for components
 $phpUrl = "https://windows.php.net/downloads/releases/php-8.3.6-Win32-vs16-x64.zip"
@@ -63,17 +64,17 @@ if (!(Test-Path "$mariadbDir\data")) {
     Start-Process -FilePath $mariadbInstallDb -ArgumentList "--datadir=$mariadbDir\data" -Wait
 }
 
-# Start MariaDB temporarily on a custom port to initialize database
-Write-Host "Starting MariaDB on port $tempPort to initialize database..."
+# Start MariaDB temporarily to initialize database and set password
+Write-Host "Starting MariaDB on port $dbPort to initialize database..."
 $mysqld = "$mariadbDir\bin\mysqld.exe"
-$mysqlProcess = Start-Process -FilePath $mysqld -ArgumentList "--datadir=$mariadbDir\data", "--port=$tempPort", "--skip-grant-tables", "--console" -PassThru -NoNewWindow
+$mysqlProcess = Start-Process -FilePath $mysqld -ArgumentList "--datadir=$mariadbDir\data", "--port=$dbPort", "--skip-grant-tables", "--console" -PassThru -NoNewWindow
 $retryCount = 0
 $maxRetries = 15
 $portFound = $false
 
 while ($retryCount -lt $maxRetries -and -not $portFound) {
     Write-Host "Waiting for MariaDB to start (Attempt $($retryCount + 1))..."
-    if (Test-NetConnection -ComputerName localhost -Port $tempPort -InformationLevel Quiet) {
+    if (Test-NetConnection -ComputerName localhost -Port $dbPort -InformationLevel Quiet) {
         $portFound = $true
     } else {
         $retryCount++
@@ -83,13 +84,18 @@ while ($retryCount -lt $maxRetries -and -not $portFound) {
 
 if ($portFound) {
     $mysqlExe = "$mariadbDir\bin\mariadb.exe"
-    Write-Host "Creating database and tables..."
+    Write-Host "Creating database and setting root password..."
     $schemaPath = Join-Path (Get-Location) "schema.sql"
-    & $mysqlExe -P $tempPort -u root -e "CREATE DATABASE IF NOT EXISTS fuel_tracker;"
-    Get-Content "$schemaPath" | & $mysqlExe -P $tempPort -u root fuel_tracker
+
+    # Create DB and set password
+    & $mysqlExe -P $dbPort -u root -e "CREATE DATABASE IF NOT EXISTS fuel_tracker;"
+    & $mysqlExe -P $dbPort -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR 'root'@'localhost' = PASSWORD('$dbPass');"
+
+    # Inject schema
+    Get-Content "$schemaPath" | & $mysqlExe -P $dbPort -u root fuel_tracker
     Write-Host "Database initialization complete."
 } else {
-    Write-Error "Could not connect to MariaDB on port $tempPort after $maxRetries attempts."
+    Write-Error "Could not connect to MariaDB on port $dbPort after $maxRetries attempts."
 }
 
 # Cleanly stop MariaDB

@@ -5,9 +5,9 @@ SET MYSQL_BIN=%APP_DIR%\mariadb\bin\mysqld.exe
 
 echo Starting Fuel Tracker...
 
-:: Start MariaDB
+:: Start MariaDB on port 3306
 echo Starting MariaDB...
-start "MariaDB" /B "%MYSQL_BIN%" --datadir="%APP_DIR%\mariadb\data" --console
+start "MariaDB" /B "%MYSQL_BIN%" --datadir="%APP_DIR%\mariadb\data" --port=3306 --console
 
 :: Wait a few seconds for DB to initialize
 timeout /t 5 /nobreak > nul
