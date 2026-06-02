@@ -86,7 +86,7 @@ if ($portFound) {
     Write-Host "Creating database and tables..."
     $schemaPath = Join-Path (Get-Location) "schema.sql"
     & $mysqlExe -P $tempPort -u root -e "CREATE DATABASE IF NOT EXISTS fuel_tracker;"
-    & $mysqlExe -P $tempPort -u root fuel_tracker < "$schemaPath"
+    Get-Content "$schemaPath" | & $mysqlExe -P $tempPort -u root fuel_tracker
     Write-Host "Database initialization complete."
 } else {
     Write-Error "Could not connect to MariaDB on port $tempPort after $maxRetries attempts."
