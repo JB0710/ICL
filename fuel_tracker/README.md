@@ -1,20 +1,21 @@
-# Fuel Tracker
+# Fuel Tracker (US Version)
 
-A simple, self-hosted PHP website to track fuel consumption for a single vehicle.
+A simple, self-hosted PHP website to track fuel consumption for a single vehicle using US measurements (Miles, Gallons, MPG). Supports Light and Dark modes based on system settings.
 
 ## Features
 - Dashboard with statistics:
-  - Total Distance
-  - Average Consumption (L/100km)
+  - Total Distance (Miles)
+  - Efficiency (MPG)
   - Total Cost
-  - Average Price per Liter
+  - Average Price per Gallon
 - Fueling History table
 - Easy-to-use "Add Entry" form
+- Dark Mode support
 
 ## Requirements
 - PHP 7.4 or higher
 - MySQL / MariaDB
-- A web server (Apache, Nginx, or PHP's built-in server)
+- A web server
 
 ## Setup Instructions
 1. **Database Setup**:
@@ -24,12 +25,12 @@ A simple, self-hosted PHP website to track fuel consumption for a single vehicle
 
 2. **Configuration**:
    - Open `includes/db.php`.
-   - Update the database credentials (`$host`, `$db`, `$user`, `$pass`) to match your environment.
+   - Update the database credentials to match your environment.
 
 3. **Deployment**:
-   - Place the `fuel_tracker` folder in your web server's document root (e.g., `/var/www/html`).
-   - Access the site via your browser (e.g., `http://localhost/fuel_tracker`).
+   - Place the `fuel_tracker` folder in your web server's document root.
+   - Access the site via your browser.
 
 ## How to use
-- **First Entry**: Enter your current odometer reading and fill the tank. The first entry is used as a baseline for distance.
-- **Subsequent Entries**: Every time you refuel, enter the date, new odometer reading, liters added, and the price per liter. The system will automatically calculate your consumption and statistics.
+- **First Entry**: Enter your current odometer reading and fill the tank.
+- **Subsequent Entries**: Enter the date, new odometer reading, gallons added, and the price per gallon. The system will automatically calculate MPG.

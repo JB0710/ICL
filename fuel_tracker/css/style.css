@@ -8,6 +8,22 @@
     --bg-color: #f4f7f6;
     --card-bg: #fff;
     --border-color: #ddd;
+    --header-border: #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #ecf0f1;
+        --secondary-color: #bdc3c7;
+        --accent-color: #3498db;
+        --success-color: #2ecc71;
+        --danger-color: #e74c3c;
+        --text-color: #e0e0e0;
+        --bg-color: #1a1a1a;
+        --card-bg: #2c2c2c;
+        --border-color: #444;
+        --header-border: #444;
+    }
 }
 
 * {
@@ -22,6 +38,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .container {
@@ -30,14 +47,14 @@ body {
     background: var(--card-bg);
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--header-border);
     padding-bottom: 20px;
     margin-bottom: 30px;
 }
@@ -53,7 +70,7 @@ nav a {
     font-weight: bold;
     padding: 5px 10px;
     border-radius: 4px;
-    transition: background 0.3s;
+    transition: background 0.3s, color 0.3s;
 }
 
 nav a:hover, nav a.active {
@@ -74,14 +91,15 @@ nav a:hover, nav a.active {
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .card h3 {
     font-size: 0.9rem;
-    color: #7f8c8d;
+    color: var(--secondary-color);
     text-transform: uppercase;
     margin-bottom: 10px;
+    opacity: 0.8;
 }
 
 .card p {
@@ -108,12 +126,12 @@ table th, table td {
 }
 
 table th {
-    background-color: #f8f9fa;
+    background-color: rgba(0,0,0,0.05);
     color: var(--secondary-color);
 }
 
 table tr:hover {
-    background-color: #f1f1f1;
+    background-color: rgba(255,255,255,0.05);
 }
 
 /* Form Styles */
@@ -130,6 +148,7 @@ table tr:hover {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    color: var(--secondary-color);
 }
 
 .form-group input {
@@ -138,6 +157,8 @@ table tr:hover {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 1rem;
+    background-color: var(--card-bg);
+    color: var(--text-color);
 }
 
 .btn {
@@ -154,16 +175,16 @@ table tr:hover {
 }
 
 .btn:hover {
-    background: #219150;
+    filter: brightness(1.1);
 }
 
 .alert {
-    background: #f8d7da;
-    color: #721c24;
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
     padding: 10px;
     border-radius: 4px;
     margin-bottom: 20px;
-    border: 1px solid #f5c6cb;
+    border: 1px solid var(--danger-color);
 }
 
 @media (max-width: 600px) {

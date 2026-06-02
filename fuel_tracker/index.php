@@ -7,9 +7,9 @@ $entries = $stmt->fetchAll();
 
 // Calculate Statistics
 $total_distance = 0;
-$total_fuel = 0;
+$total_gallons = 0;
 $total_cost = 0;
-$avg_consumption = 0;
+$mpg = 0;
 $avg_price = 0;
 
 if (count($entries) > 1) {
@@ -18,31 +18,25 @@ if (count($entries) > 1) {
 
     $total_distance = $latest['odometer'] - $oldest['odometer'];
 
-    // We sum all fuel except the very first entry (because we don't know the distance before the first entry)
-    // Or we can sum all fuel and divide by total distance.
-    // Usually, L/100km = (Total Fuel / Total Distance) * 100
-    // We should only count fuel from the oldest entry *up to* the latest entry.
-    // Actually, the common way is to sum fuel from entries where we have a distance covered.
-
     foreach ($entries as $index => $entry) {
-        if ($index < count($entries) - 1) { // Skip oldest entry fuel for consumption calc if using difference
-             $total_fuel += $entry['liters'];
+        if ($index < count($entries) - 1) { // Skip oldest entry gallons for MPG calc
+             $total_gallons += $entry['gallons'];
         }
         $total_cost += $entry['total_cost'];
     }
 
-    if ($total_distance > 0) {
-        $avg_consumption = ($total_fuel / $total_distance) * 100;
+    if ($total_gallons > 0) {
+        $mpg = $total_distance / $total_gallons;
     }
 
-    $all_fuel = array_sum(array_column($entries, 'liters'));
-    if ($all_fuel > 0) {
-        $avg_price = $total_cost / $all_fuel;
+    $all_gallons = array_sum(array_column($entries, 'gallons'));
+    if ($all_gallons > 0) {
+        $avg_price = $total_cost / $all_gallons;
     }
 } elseif (count($entries) == 1) {
     $total_cost = $entries[0]['total_cost'];
-    $all_fuel = $entries[0]['liters'];
-    $avg_price = $total_cost / $all_fuel;
+    $all_gallons = $entries[0]['gallons'];
+    $avg_price = $total_cost / $all_gallons;
 }
 
 ?>
@@ -67,11 +61,11 @@ if (count($entries) > 1) {
         <section class="stats">
             <div class="card">
                 <h3>Total Distance</h3>
-                <p><?php echo number_format($total_distance, 1); ?> km</p>
+                <p><?php echo number_format($total_distance, 1); ?> mi</p>
             </div>
             <div class="card">
-                <h3>Avg Consumption</h3>
-                <p><?php echo number_format($avg_consumption, 2); ?> L/100km</p>
+                <h3>Efficiency</h3>
+                <p><?php echo number_format($mpg, 2); ?> MPG</p>
             </div>
             <div class="card">
                 <h3>Total Cost</h3>
@@ -79,7 +73,7 @@ if (count($entries) > 1) {
             </div>
             <div class="card">
                 <h3>Avg Price</h3>
-                <p>$<?php echo number_format($avg_price, 3); ?> /L</p>
+                <p>$<?php echo number_format($avg_price, 3); ?> /gal</p>
             </div>
         </section>
 
@@ -89,9 +83,9 @@ if (count($entries) > 1) {
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Odometer (km)</th>
-                        <th>Liters</th>
-                        <th>Price/L</th>
+                        <th>Odometer (mi)</th>
+                        <th>Gallons</th>
+                        <th>Price/gal</th>
                         <th>Total Cost</th>
                     </tr>
                 </thead>
@@ -100,8 +94,8 @@ if (count($entries) > 1) {
                     <tr>
                         <td><?php echo htmlspecialchars($entry['fill_date']); ?></td>
                         <td><?php echo number_format($entry['odometer'], 1); ?></td>
-                        <td><?php echo number_format($entry['liters'], 2); ?></td>
-                        <td>$<?php echo number_format($entry['price_per_liter'], 3); ?></td>
+                        <td><?php echo number_format($entry['gallons'], 2); ?></td>
+                        <td>$<?php echo number_format($entry['price_per_gallon'], 3); ?></td>
                         <td>$<?php echo number_format($entry['total_cost'], 2); ?></td>
                     </tr>
                     <?php endforeach; ?>

@@ -6,16 +6,16 @@ $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fill_date = $_POST['fill_date'] ?? '';
     $odometer = $_POST['odometer'] ?? '';
-    $liters = $_POST['liters'] ?? '';
+    $gallons = $_POST['gallons'] ?? '';
     $price = $_POST['price'] ?? '';
 
-    if ($fill_date && $odometer && $liters && $price) {
-        $total_cost = $liters * $price;
+    if ($fill_date && $odometer && $gallons && $price) {
+        $total_cost = $gallons * $price;
 
         try {
-            $sql = "INSERT INTO fuel_entries (fill_date, odometer, liters, price_per_liter, total_cost) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO fuel_entries (fill_date, odometer, gallons, price_per_gallon, total_cost) VALUES (?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$fill_date, $odometer, $liters, $price, $total_cost]);
+            $stmt->execute([$fill_date, $odometer, $gallons, $price, $total_cost]);
             header("Location: index.php");
             die();
         } catch (\PDOException $e) {
@@ -55,16 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="date" name="fill_date" id="fill_date" value="<?php echo date('Y-m-d'); ?>" required>
                 </div>
                 <div class="form-group">
-                    <label for="odometer">Odometer Reading (km)</label>
+                    <label for="odometer">Odometer Reading (mi)</label>
                     <input type="number" step="0.1" name="odometer" id="odometer" placeholder="e.g. 12500.5" required>
                 </div>
                 <div class="form-group">
-                    <label for="liters">Liters</label>
-                    <input type="number" step="0.01" name="liters" id="liters" placeholder="e.g. 45.20" required>
+                    <label for="gallons">Gallons</label>
+                    <input type="number" step="0.01" name="gallons" id="gallons" placeholder="e.g. 12.50" required>
                 </div>
                 <div class="form-group">
-                    <label for="price">Price per Liter</label>
-                    <input type="number" step="0.001" name="price" id="price" placeholder="e.g. 1.459" required>
+                    <label for="price">Price per Gallon</label>
+                    <input type="number" step="0.001" name="price" id="price" placeholder="e.g. 3.459" required>
                 </div>
                 <button type="submit" class="btn">Save Entry</button>
             </form>
