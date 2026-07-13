@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather Radar & Forecast</title>
+  <title>Weather Radar & Forecast Sidebar</title>
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <!-- Leaflet JS -->
@@ -23,31 +23,33 @@
       overflow: hidden;
       height: 100vh;
       display: flex;
-      flex-direction: column;
+      flex-direction: row; /* Horizontal split */
     }
     #radar-map {
-      height: 60vh;
-      width: 100%;
+      height: 100vh;
+      width: 70%; /* 70% Left side map */
       background-color: #111827;
       position: relative;
     }
     #forecast-panel {
-      height: 40vh;
-      width: 100%;
+      height: 100vh;
+      width: 30%; /* 30% Right side sidebar */
       background: linear-gradient(180deg, #111827 0%, #0b0f19 100%);
-      border-top: 2px solid #374151;
-      box-shadow: 0 -8px 24px -4px rgba(0, 0, 0, 0.5);
+      border-l: 2px solid #374151;
+      box-shadow: -8px 0 24px -4px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 1.25rem 2rem;
+      justify-content: flex-start;
+      padding: 1.5rem 1.25rem;
       box-sizing: border-box;
+      gap: 1.25rem;
+      overflow-y: auto;
     }
     /* Radar control styling overlay */
     .radar-control {
       position: absolute;
       top: 15px;
-      right: 15px;
+      left: 15px; /* Moved to left side to avoid overlapping with right sidebar */
       background: rgba(17, 24, 39, 0.9);
       border: 1px solid #4b5563;
       padding: 10px 16px;
@@ -93,7 +95,7 @@
 </head>
 <body>
 
-  <!-- Top 60% Radar Map Area -->
+  <!-- Left 70% Radar Map Area -->
   <div id="radar-map">
     <!-- Overlay info and playback control -->
     <div class="radar-control">
@@ -110,89 +112,90 @@
     </div>
   </div>
 
-  <!-- Bottom 40% Forecast and Current Conditions Area (Optimized for Large TV/Signage) -->
+  <!-- Right 30% Forecast Sidebar Area (Optimized for Large TV/Signage) -->
   <div id="forecast-panel">
-    <!-- Current & Quick Stats row -->
-    <div class="flex justify-between items-center pb-3 border-b border-gray-800">
-      <div class="flex items-center gap-6">
-        <div>
-          <h1 id="location-title" class="text-3xl font-black text-white tracking-tight">Loading Location...</h1>
-          <p id="current-time-text" class="text-sm text-gray-400 font-semibold">Loading local time...</p>
+    <!-- Header location details -->
+    <div class="pb-3 border-b border-gray-800">
+      <h1 id="location-title" class="text-3xl font-black text-white tracking-tight text-center leading-tight">Loading Location...</h1>
+      <p id="current-time-text" class="text-sm text-gray-400 font-semibold text-center mt-1">Loading local time...</p>
+    </div>
+
+    <!-- Current Temperature and Icon -->
+    <div class="flex items-center justify-center gap-4 bg-gray-900/80 px-4 py-3 rounded-2xl border border-gray-800 shadow-md">
+      <div id="current-icon-container">
+        <i data-lucide="cloud-sun" class="w-14 h-14 text-yellow-400"></i>
+      </div>
+      <div>
+        <div class="flex items-start">
+          <span id="current-temp" class="text-5xl font-black leading-none">--</span>
+          <span id="temp-unit-symbol" class="text-xl font-black ml-0.5 text-gray-400">°F</span>
         </div>
-        <div class="flex items-center gap-3 bg-gray-900/80 px-4 py-2.5 rounded-xl border border-gray-800">
-          <div id="current-icon-container">
-            <i data-lucide="cloud-sun" class="w-12 h-12 text-yellow-400"></i>
-          </div>
-          <div>
-            <div class="flex items-start">
-              <span id="current-temp" class="text-4xl font-black leading-none">--</span>
-              <span id="temp-unit-symbol" class="text-lg font-black ml-0.5 text-gray-400">°F</span>
-            </div>
-            <p id="current-condition-text" class="text-xs font-bold text-gray-300">Loading...</p>
-          </div>
+        <p id="current-condition-text" class="text-sm font-black text-gray-300 mt-1">Loading...</p>
+      </div>
+    </div>
+
+    <!-- Quick Metrics (Vertical Stack inside Sidebar) -->
+    <div class="grid grid-cols-2 gap-3">
+      <div class="flex items-center gap-2.5 bg-gray-900/40 px-3 py-2 rounded-xl border border-gray-800/50">
+        <i data-lucide="droplets" class="w-6 h-6 text-blue-400 shrink-0"></i>
+        <div>
+          <p class="text-[10px] text-gray-400 uppercase tracking-wider font-extrabold">Humidity</p>
+          <p id="metric-humidity" class="text-sm font-extrabold text-gray-100">--%</p>
         </div>
       </div>
-
-      <!-- Quick Metrics Grid -->
-      <div class="flex gap-6">
-        <div class="flex items-center gap-3 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800/50">
-          <i data-lucide="droplets" class="w-7 h-7 text-blue-400"></i>
-          <div>
-            <p class="text-[11px] text-gray-400 uppercase tracking-wider font-extrabold">Humidity</p>
-            <p id="metric-humidity" class="text-lg font-extrabold text-gray-100">--%</p>
-          </div>
+      <div class="flex items-center gap-2.5 bg-gray-900/40 px-3 py-2 rounded-xl border border-gray-800/50">
+        <i data-lucide="wind" class="text-teal-400 w-6 h-6 shrink-0"></i>
+        <div>
+          <p class="text-[10px] text-gray-400 uppercase tracking-wider font-extrabold">Wind</p>
+          <p id="metric-wind" class="text-sm font-extrabold text-gray-100">-- mph</p>
         </div>
-        <div class="flex items-center gap-3 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800/50">
-          <i data-lucide="wind" class="text-teal-400 w-7 h-7"></i>
-          <div>
-            <p class="text-[11px] text-gray-400 uppercase tracking-wider font-extrabold">Wind</p>
-            <p id="metric-wind" class="text-lg font-extrabold text-gray-100">-- mph</p>
-          </div>
+      </div>
+      <div class="flex items-center gap-2.5 bg-gray-900/40 px-3 py-2 rounded-xl border border-gray-800/50">
+        <i data-lucide="cloud-rain" class="text-indigo-400 w-6 h-6 shrink-0"></i>
+        <div>
+          <p class="text-[10px] text-gray-400 uppercase tracking-wider font-extrabold">Rain Prob</p>
+          <p id="metric-precip" class="text-sm font-extrabold text-gray-100">--%</p>
         </div>
-        <div class="flex items-center gap-3 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800/50">
-          <i data-lucide="cloud-rain" class="text-indigo-400 w-7 h-7"></i>
-          <div>
-            <p class="text-[11px] text-gray-400 uppercase tracking-wider font-extrabold">Rain Prob</p>
-            <p id="metric-precip" class="text-lg font-extrabold text-gray-100">--%</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-3 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800/50">
-          <i data-lucide="sun" class="text-amber-400 w-7 h-7"></i>
-          <div>
-            <p class="text-[11px] text-gray-400 uppercase tracking-wider font-extrabold">UV Index</p>
-            <p id="metric-uv" class="text-lg font-extrabold text-gray-100">--</p>
-          </div>
+      </div>
+      <div class="flex items-center gap-2.5 bg-gray-900/40 px-3 py-2 rounded-xl border border-gray-800/50">
+        <i data-lucide="sun" class="text-amber-400 w-6 h-6 shrink-0"></i>
+        <div>
+          <p class="text-[10px] text-gray-400 uppercase tracking-wider font-extrabold">UV Index</p>
+          <p id="metric-uv" class="text-sm font-extrabold text-gray-100">--</p>
         </div>
       </div>
     </div>
 
-    <!-- 5-Day Forecast horizontal display (Cards enlarged for high-vis TV digital signage with exactly 5px top & bottom padding) -->
-    <div id="forecast-cards" class="grid grid-cols-5 gap-4 pt-2 flex-grow items-center">
-      <!-- Cards will be populated dynamically -->
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
-        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
-        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
-        <div class="h-6 w-24 bg-gray-800 rounded"></div>
-      </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
-        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
-        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
-        <div class="h-6 w-24 bg-gray-800 rounded"></div>
-      </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
-        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
-        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
-        <div class="h-6 w-24 bg-gray-800 rounded"></div>
-      </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
-        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
-        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
-        <div class="h-6 w-24 bg-gray-800 rounded"></div>
-      </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
-        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
-        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
-        <div class="h-6 w-24 bg-gray-800 rounded"></div>
+    <!-- 5-Day Forecast (Vertical Stack for Sidebar layout with exactly 5px top & bottom padding) -->
+    <div class="border-t border-gray-800 pt-3">
+      <h2 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-3 text-center">5-DAY FORECAST</h2>
+      <div id="forecast-cards" class="flex flex-col gap-2.5">
+        <!-- Cards will be populated dynamically -->
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
+          <div class="h-4 w-12 bg-gray-800 rounded"></div>
+          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
+          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        </div>
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
+          <div class="h-4 w-12 bg-gray-800 rounded"></div>
+          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
+          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        </div>
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
+          <div class="h-4 w-12 bg-gray-800 rounded"></div>
+          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
+          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        </div>
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
+          <div class="h-4 w-12 bg-gray-800 rounded"></div>
+          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
+          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        </div>
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
+          <div class="h-4 w-12 bg-gray-800 rounded"></div>
+          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
+          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -204,7 +207,7 @@
       longitude: -74.0060,
       locationName: "New York, NY",
       units: "imperial",
-      radarZoom: 8,
+      radarZoom: 5,
       updateIntervalMinutes: 10
     };
 
@@ -327,7 +330,7 @@
         document.getElementById("current-condition-text").innerText = weatherInfo.text;
 
         const currentIconContainer = document.getElementById("current-icon-container");
-        currentIconContainer.innerHTML = `<i data-lucide="${weatherInfo.icon}" class="w-12 h-12 ${weatherInfo.color}"></i>`;
+        currentIconContainer.innerHTML = `<i data-lucide="${weatherInfo.icon}" class="w-14 h-14 ${weatherInfo.color}"></i>`;
 
         document.getElementById("metric-humidity").innerText = `${Math.round(current.relative_humidity_2m)}%`;
         document.getElementById("metric-wind").innerText = `${Math.round(current.wind_speed_10m)} ${isImperial ? "mph" : "km/h"}`;
@@ -354,21 +357,24 @@
           const precipProb = daily.precipitation_probability_max[i] || 0;
 
           const card = document.createElement("div");
+          // Horizontal list item card format to perfectly display inside the vertical sidebar stack
           // Exact 5px top & bottom padding with py-[5px] and px-4
-          card.className = "bg-gray-900/50 border border-gray-800 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-between text-center backdrop-blur-md shadow-lg transition-all hover:border-gray-700 h-[210px] w-full";
+          card.className = "bg-gray-900/50 border border-gray-800 rounded-xl py-[5px] px-4 flex items-center justify-between text-left backdrop-blur-md shadow-md transition-all hover:border-gray-700 h-[65px] w-full gap-2";
           card.innerHTML = `
-            <span class="text-lg font-black text-blue-400 uppercase tracking-widest">${dayName}</span>
-            <div class="my-2.5 flex flex-col items-center">
-              <i data-lucide="${dayInfo.icon}" class="w-16 h-16 ${dayInfo.color} drop-shadow-md"></i>
-              <span class="text-xs text-gray-300 mt-2 block truncate max-w-[140px] font-bold tracking-wide">${dayInfo.text}</span>
+            <div class="flex flex-col min-w-[70px]">
+              <span class="text-sm font-black text-blue-400 uppercase tracking-wider">${dayName}</span>
+              <span class="text-[10px] text-gray-400 font-bold truncate max-w-[80px]">${dayInfo.text}</span>
             </div>
-            <div class="flex flex-col items-center w-full">
-              <div class="flex gap-3 text-lg font-black">
+            <div class="flex items-center gap-2">
+              <i data-lucide="${dayInfo.icon}" class="w-10 h-10 ${dayInfo.color} drop-shadow-md shrink-0"></i>
+            </div>
+            <div class="flex flex-col items-end shrink-0">
+              <div class="flex gap-2 text-sm font-black">
                 <span class="text-white">${maxTemp}°</span>
                 <span class="text-gray-500">${minTemp}°</span>
               </div>
-              <div class="flex items-center gap-1 mt-1 text-xs font-black text-indigo-400">
-                <i data-lucide="droplet" class="w-3.5 h-3.5"></i>
+              <div class="flex items-center gap-0.5 mt-0.5 text-[10px] font-black text-indigo-400">
+                <i data-lucide="droplet" class="w-3 h-3"></i>
                 <span>${precipProb}%</span>
               </div>
             </div>

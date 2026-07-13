@@ -3,6 +3,6 @@
   "longitude": -74.006,
   "locationName": "New York, NY",
   "units": "imperial",
-  "radarZoom": 8,
+  "radarZoom": 5,
   "updateIntervalMinutes": 10
 }
