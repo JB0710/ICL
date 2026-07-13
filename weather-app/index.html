@@ -26,46 +26,47 @@
       flex-direction: column;
     }
     #radar-map {
-      height: 68vh;
+      height: 60vh;
       width: 100%;
       background-color: #111827;
       position: relative;
     }
     #forecast-panel {
-      height: 32vh;
+      height: 40vh;
       width: 100%;
       background: linear-gradient(180deg, #111827 0%, #0b0f19 100%);
-      border-top: 1px solid #1f2937;
-      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.3);
+      border-top: 2px solid #374151;
+      box-shadow: 0 -8px 24px -4px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 0.75rem 1.5rem;
+      padding: 1.25rem 2rem;
       box-sizing: border-box;
     }
     /* Radar control styling overlay */
     .radar-control {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(17, 24, 39, 0.85);
-      border: 1px solid #374151;
-      padding: 8px 12px;
-      border-radius: 8px;
+      top: 15px;
+      right: 15px;
+      background: rgba(17, 24, 39, 0.9);
+      border: 1px solid #4b5563;
+      padding: 10px 16px;
+      border-radius: 10px;
       z-index: 1000;
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 0.85rem;
+      gap: 16px;
+      font-size: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     }
     .radar-control button {
       background: #2563eb;
       color: white;
       border: none;
-      padding: 4px 10px;
-      border-radius: 4px;
+      padding: 6px 14px;
+      border-radius: 6px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
       transition: background 0.2s;
     }
     .radar-control button:hover {
@@ -92,106 +93,106 @@
 </head>
 <body>
 
-  <!-- Top 68% Radar Map Area -->
+  <!-- Top 60% Radar Map Area -->
   <div id="radar-map">
     <!-- Overlay info and playback control -->
     <div class="radar-control">
       <div class="flex items-center gap-2">
-        <i data-lucide="radio" class="text-red-500 animate-pulse w-5 h-5"></i>
-        <span class="font-bold tracking-wide">RADAR PLAYBACK</span>
+        <i data-lucide="radio" class="text-red-500 animate-pulse w-6 h-6"></i>
+        <span class="font-bold tracking-wider">RADAR PLAYBACK</span>
       </div>
-      <div id="radar-time" class="text-blue-400 font-mono font-bold min-w-[80px] text-center">Loading...</div>
+      <div id="radar-time" class="text-blue-400 font-mono font-black min-w-[100px] text-center text-lg">Loading...</div>
       <button id="btn-play-pause">Pause</button>
-      <div class="text-gray-400 text-xs flex items-center gap-1">
-        <i data-lucide="info" class="w-4 h-4"></i>
+      <div class="text-gray-400 text-sm flex items-center gap-1">
+        <i data-lucide="info" class="w-5 h-5"></i>
         <span>Looping last 2h</span>
       </div>
     </div>
   </div>
 
-  <!-- Bottom 32% Forecast and Current Conditions Area -->
+  <!-- Bottom 40% Forecast and Current Conditions Area (Optimized for Large TV/Signage) -->
   <div id="forecast-panel">
     <!-- Current & Quick Stats row -->
-    <div class="flex justify-between items-center pb-2 border-b border-gray-800">
-      <div class="flex items-center gap-4">
+    <div class="flex justify-between items-center pb-3 border-b border-gray-800">
+      <div class="flex items-center gap-6">
         <div>
-          <h1 id="location-title" class="text-xl font-extrabold text-white tracking-tight">Loading Location...</h1>
-          <p id="current-time-text" class="text-xs text-gray-400">Loading local time...</p>
+          <h1 id="location-title" class="text-3xl font-black text-white tracking-tight">Loading Location...</h1>
+          <p id="current-time-text" class="text-sm text-gray-400 font-semibold">Loading local time...</p>
         </div>
-        <div class="flex items-center gap-2 bg-gray-900/60 px-3 py-1.5 rounded-lg border border-gray-800">
+        <div class="flex items-center gap-3 bg-gray-900/80 px-4 py-2.5 rounded-xl border border-gray-800">
           <div id="current-icon-container">
-            <i data-lucide="cloud-sun" class="w-8 h-8 text-yellow-400"></i>
+            <i data-lucide="cloud-sun" class="w-12 h-12 text-yellow-400"></i>
           </div>
           <div>
             <div class="flex items-start">
-              <span id="current-temp" class="text-2xl font-black leading-none">--</span>
-              <span id="temp-unit-symbol" class="text-sm font-bold ml-0.5 text-gray-400">°F</span>
+              <span id="current-temp" class="text-4xl font-black leading-none">--</span>
+              <span id="temp-unit-symbol" class="text-lg font-black ml-0.5 text-gray-400">°F</span>
             </div>
-            <p id="current-condition-text" class="text-xs font-semibold text-gray-300">Loading...</p>
+            <p id="current-condition-text" class="text-sm font-bold text-gray-300">Loading...</p>
           </div>
         </div>
       </div>
 
-      <!-- Quick Metrics Grid -->
-      <div class="flex gap-4">
-        <div class="flex items-center gap-2 bg-gray-900/40 px-3 py-1 rounded-lg border border-gray-800/50">
-          <i data-lucide="droplets" class="w-5 h-5 text-blue-400"></i>
+      <!-- Quick Metrics Grid (Larger font/icons for TVs) -->
+      <div class="flex gap-6">
+        <div class="flex items-center gap-3 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800/50">
+          <i data-lucide="droplets" class="w-7 h-7 text-blue-400"></i>
           <div>
-            <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Humidity</p>
-            <p id="metric-humidity" class="text-sm font-bold text-gray-100">--%</p>
+            <p class="text-[11px] text-gray-400 uppercase tracking-wider font-extrabold">Humidity</p>
+            <p id="metric-humidity" class="text-lg font-extrabold text-gray-100">--%</p>
           </div>
         </div>
-        <div class="flex items-center gap-2 bg-gray-900/40 px-3 py-1 rounded-lg border border-gray-800/50">
-          <i data-lucide="wind" class="text-teal-400 w-5 h-5"></i>
+        <div class="flex items-center gap-3 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800/50">
+          <i data-lucide="wind" class="text-teal-400 w-7 h-7"></i>
           <div>
-            <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Wind</p>
-            <p id="metric-wind" class="text-sm font-bold text-gray-100">-- mph</p>
+            <p class="text-[11px] text-gray-400 uppercase tracking-wider font-extrabold">Wind</p>
+            <p id="metric-wind" class="text-lg font-extrabold text-gray-100">-- mph</p>
           </div>
         </div>
-        <div class="flex items-center gap-2 bg-gray-900/40 px-3 py-1 rounded-lg border border-gray-800/50">
-          <i data-lucide="cloud-rain" class="text-indigo-400 w-5 h-5"></i>
+        <div class="flex items-center gap-3 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800/50">
+          <i data-lucide="cloud-rain" class="text-indigo-400 w-7 h-7"></i>
           <div>
-            <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Rain Prob</p>
-            <p id="metric-precip" class="text-sm font-bold text-gray-100">--%</p>
+            <p class="text-[11px] text-gray-400 uppercase tracking-wider font-extrabold">Rain Prob</p>
+            <p id="metric-precip" class="text-lg font-extrabold text-gray-100">--%</p>
           </div>
         </div>
-        <div class="flex items-center gap-2 bg-gray-900/40 px-3 py-1 rounded-lg border border-gray-800/50">
-          <i data-lucide="sun" class="text-amber-400 w-5 h-5"></i>
+        <div class="flex items-center gap-3 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800/50">
+          <i data-lucide="sun" class="text-amber-400 w-7 h-7"></i>
           <div>
-            <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">UV Index</p>
-            <p id="metric-uv" class="text-sm font-bold text-gray-100">--</p>
+            <p class="text-[11px] text-gray-400 uppercase tracking-wider font-extrabold">UV Index</p>
+            <p id="metric-uv" class="text-lg font-extrabold text-gray-100">--</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 5-Day Forecast horizontal display -->
-    <div id="forecast-cards" class="grid grid-cols-5 gap-3 pt-1">
+    <!-- 5-Day Forecast horizontal display (Cards enlarged for high-vis TV digital signage) -->
+    <div id="forecast-cards" class="grid grid-cols-5 gap-4 pt-2 flex-grow items-center">
       <!-- Cards will be populated dynamically -->
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl p-2.5 flex flex-col items-center justify-center animate-pulse">
-        <div class="h-4 w-12 bg-gray-800 rounded mb-2"></div>
-        <div class="h-8 w-8 bg-gray-800 rounded-full mb-2"></div>
-        <div class="h-4 w-16 bg-gray-800 rounded"></div>
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
+        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
+        <div class="h-6 w-24 bg-gray-800 rounded"></div>
       </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl p-2.5 flex flex-col items-center justify-center animate-pulse">
-        <div class="h-4 w-12 bg-gray-800 rounded mb-2"></div>
-        <div class="h-8 w-8 bg-gray-800 rounded-full mb-2"></div>
-        <div class="h-4 w-16 bg-gray-800 rounded"></div>
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
+        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
+        <div class="h-6 w-24 bg-gray-800 rounded"></div>
       </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl p-2.5 flex flex-col items-center justify-center animate-pulse">
-        <div class="h-4 w-12 bg-gray-800 rounded mb-2"></div>
-        <div class="h-8 w-8 bg-gray-800 rounded-full mb-2"></div>
-        <div class="h-4 w-16 bg-gray-800 rounded"></div>
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
+        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
+        <div class="h-6 w-24 bg-gray-800 rounded"></div>
       </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl p-2.5 flex flex-col items-center justify-center animate-pulse">
-        <div class="h-4 w-12 bg-gray-800 rounded mb-2"></div>
-        <div class="h-8 w-8 bg-gray-800 rounded-full mb-2"></div>
-        <div class="h-4 w-16 bg-gray-800 rounded"></div>
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
+        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
+        <div class="h-6 w-24 bg-gray-800 rounded"></div>
       </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl p-2.5 flex flex-col items-center justify-center animate-pulse">
-        <div class="h-4 w-12 bg-gray-800 rounded mb-2"></div>
-        <div class="h-8 w-8 bg-gray-800 rounded-full mb-2"></div>
-        <div class="h-4 w-16 bg-gray-800 rounded"></div>
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+        <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
+        <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
+        <div class="h-6 w-24 bg-gray-800 rounded"></div>
       </div>
     </div>
   </div>
@@ -326,7 +327,7 @@
         document.getElementById("current-condition-text").innerText = weatherInfo.text;
 
         const currentIconContainer = document.getElementById("current-icon-container");
-        currentIconContainer.innerHTML = `<i data-lucide="${weatherInfo.icon}" class="w-9 h-9 ${weatherInfo.color}"></i>`;
+        currentIconContainer.innerHTML = `<i data-lucide="${weatherInfo.icon}" class="w-12 h-12 ${weatherInfo.color}"></i>`;
 
         document.getElementById("metric-humidity").innerText = `${Math.round(current.relative_humidity_2m)}%`;
         document.getElementById("metric-wind").innerText = `${Math.round(current.wind_speed_10m)} ${isImperial ? "mph" : "km/h"}`;
@@ -353,20 +354,21 @@
           const precipProb = daily.precipitation_probability_max[i] || 0;
 
           const card = document.createElement("div");
-          card.className = "bg-gray-900/40 border border-gray-800/80 rounded-xl p-2 flex flex-col items-center justify-between text-center backdrop-blur-sm shadow-md transition-all hover:border-gray-700";
+          // Enlarged layouts, paddings, margins, flexbox, text alignments and icons for TV display
+          card.className = "bg-gray-900/50 border border-gray-800 rounded-2xl p-4 flex flex-col items-center justify-between text-center backdrop-blur-md shadow-lg transition-all hover:border-gray-700 h-[210px] w-full";
           card.innerHTML = `
-            <span class="text-xs font-bold text-gray-400 uppercase tracking-wide">${dayName}</span>
-            <div class="my-1.5 flex flex-col items-center">
-              <i data-lucide="${dayInfo.icon}" class="w-8 h-8 ${dayInfo.color}"></i>
-              <span class="text-[10px] text-gray-400 mt-1 block truncate max-w-[80px] font-semibold">${dayInfo.text}</span>
+            <span class="text-lg font-black text-blue-400 uppercase tracking-widest">${dayName}</span>
+            <div class="my-2.5 flex flex-col items-center">
+              <i data-lucide="${dayInfo.icon}" class="w-16 h-16 ${dayInfo.color} drop-shadow-md"></i>
+              <span class="text-xs text-gray-300 mt-2 block truncate max-w-[140px] font-bold tracking-wide">${dayInfo.text}</span>
             </div>
-            <div class="flex flex-col items-center">
-              <div class="flex gap-1.5 text-xs font-bold">
+            <div class="flex flex-col items-center w-full">
+              <div class="flex gap-3 text-lg font-black">
                 <span class="text-white">${maxTemp}°</span>
                 <span class="text-gray-500">${minTemp}°</span>
               </div>
-              <div class="flex items-center gap-0.5 mt-0.5 text-[9px] font-bold text-blue-400/90">
-                <i data-lucide="droplet" class="w-2.5 h-2.5"></i>
+              <div class="flex items-center gap-1 mt-1 text-xs font-black text-indigo-400">
+                <i data-lucide="droplet" class="w-3.5 h-3.5"></i>
                 <span>${precipProb}%</span>
               </div>
             </div>
