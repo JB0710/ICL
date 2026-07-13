@@ -49,7 +49,7 @@
     .radar-control {
       position: absolute;
       top: 15px;
-      left: 15px; /* Moved to left side to avoid overlapping with right sidebar */
+      left: 15px; /* Left side overlay */
       background: rgba(17, 24, 39, 0.9);
       border: 1px solid #4b5563;
       padding: 10px 16px;
@@ -112,7 +112,7 @@
     </div>
   </div>
 
-  <!-- Right 30% Forecast Sidebar Area (Optimized for Large TV/Signage) -->
+  <!-- Right 30% Forecast Sidebar Area (Optimized for 1080p TVs & Digital Signage) -->
   <div id="forecast-panel">
     <!-- Header location details -->
     <div class="pb-3 border-b border-gray-800">
@@ -123,7 +123,7 @@
     <!-- Current Temperature and Icon -->
     <div class="flex items-center justify-center gap-4 bg-gray-900/80 px-4 py-3 rounded-2xl border border-gray-800 shadow-md">
       <div id="current-icon-container">
-        <i data-lucide="cloud-sun" class="w-14 h-14 text-yellow-400"></i>
+        <i data-lucide="cloud-sun" class="w-16 h-16 text-yellow-400"></i>
       </div>
       <div>
         <div class="flex items-start">
@@ -169,32 +169,32 @@
     <!-- 5-Day Forecast (Vertical Stack for Sidebar layout with exactly 5px top & bottom padding) -->
     <div class="border-t border-gray-800 pt-3">
       <h2 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-3 text-center">5-DAY FORECAST</h2>
-      <div id="forecast-cards" class="flex flex-col gap-2.5">
+      <div id="forecast-cards" class="flex flex-col gap-3">
         <!-- Cards will be populated dynamically -->
-        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
-          <div class="h-4 w-12 bg-gray-800 rounded"></div>
-          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
-          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[115px]">
+          <div class="h-6 w-20 bg-gray-800 rounded"></div>
+          <div class="h-12 w-12 bg-gray-800 rounded-full"></div>
+          <div class="h-6 w-24 bg-gray-800 rounded"></div>
         </div>
-        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
-          <div class="h-4 w-12 bg-gray-800 rounded"></div>
-          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
-          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[115px]">
+          <div class="h-6 w-20 bg-gray-800 rounded"></div>
+          <div class="h-12 w-12 bg-gray-800 rounded-full"></div>
+          <div class="h-6 w-24 bg-gray-800 rounded"></div>
         </div>
-        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
-          <div class="h-4 w-12 bg-gray-800 rounded"></div>
-          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
-          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[115px]">
+          <div class="h-6 w-20 bg-gray-800 rounded"></div>
+          <div class="h-12 w-12 bg-gray-800 rounded-full"></div>
+          <div class="h-6 w-24 bg-gray-800 rounded"></div>
         </div>
-        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
-          <div class="h-4 w-12 bg-gray-800 rounded"></div>
-          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
-          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[115px]">
+          <div class="h-6 w-20 bg-gray-800 rounded"></div>
+          <div class="h-12 w-12 bg-gray-800 rounded-full"></div>
+          <div class="h-6 w-24 bg-gray-800 rounded"></div>
         </div>
-        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[45px]">
-          <div class="h-4 w-12 bg-gray-800 rounded"></div>
-          <div class="h-6 w-6 bg-gray-800 rounded-full"></div>
-          <div class="h-4 w-16 bg-gray-800 rounded"></div>
+        <div class="bg-gray-900/30 border border-gray-800/50 rounded-xl py-[5px] px-4 flex items-center justify-between animate-pulse h-[115px]">
+          <div class="h-6 w-20 bg-gray-800 rounded"></div>
+          <div class="h-12 w-12 bg-gray-800 rounded-full"></div>
+          <div class="h-6 w-24 bg-gray-800 rounded"></div>
         </div>
       </div>
     </div>
@@ -264,6 +264,14 @@
         console.warn("Could not load config.json, using defaults.", err);
       }
 
+      // Constrain zoom to robustly supported levels [2 - 16] to prevent errors on Raspberry Pi 5
+      let zVal = parseInt(config.radarZoom);
+      if (isNaN(zVal) || zVal < 2 || zVal > 16) {
+        config.radarZoom = 5;
+      } else {
+        config.radarZoom = zVal;
+      }
+
       lucide.createIcons();
       updateClock();
       setInterval(updateClock, 1000);
@@ -285,11 +293,14 @@
     function initMap() {
       map = L.map("radar-map", {
         zoomControl: true,
-        attributionControl: false
+        attributionControl: false,
+        minZoom: 2,
+        maxZoom: 16 // Clamp Leaflet native zooms to supported limits
       }).setView([config.latitude, config.longitude], config.radarZoom);
 
       L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        maxZoom: 19
+        minZoom: 2,
+        maxZoom: 16
       }).addTo(map);
 
       const pulseIcon = L.divIcon({
@@ -357,24 +368,24 @@
           const precipProb = daily.precipitation_probability_max[i] || 0;
 
           const card = document.createElement("div");
-          // Horizontal list item card format to perfectly display inside the vertical sidebar stack
-          // Exact 5px top & bottom padding with py-[5px] and px-4
-          card.className = "bg-gray-900/50 border border-gray-800 rounded-xl py-[5px] px-4 flex items-center justify-between text-left backdrop-blur-md shadow-md transition-all hover:border-gray-700 h-[65px] w-full gap-2";
+          // Enlarged forecast card format for beautiful high-readability on 1080p TVs
+          // Exact 5px top & bottom padding with py-[5px] and px-4, height 115px
+          card.className = "bg-gray-900/50 border border-gray-800 rounded-2xl py-[5px] px-5 flex items-center justify-between text-left backdrop-blur-md shadow-md transition-all hover:border-gray-700 h-[115px] w-full gap-2";
           card.innerHTML = `
-            <div class="flex flex-col min-w-[70px]">
-              <span class="text-sm font-black text-blue-400 uppercase tracking-wider">${dayName}</span>
-              <span class="text-[10px] text-gray-400 font-bold truncate max-w-[80px]">${dayInfo.text}</span>
+            <div class="flex flex-col min-w-[100px] gap-1">
+              <span class="text-xl font-black text-blue-400 uppercase tracking-widest leading-none">${dayName}</span>
+              <span class="text-xs text-gray-300 font-bold leading-tight">${dayInfo.text}</span>
             </div>
-            <div class="flex items-center gap-2">
-              <i data-lucide="${dayInfo.icon}" class="w-10 h-10 ${dayInfo.color} drop-shadow-md shrink-0"></i>
+            <div class="flex items-center">
+              <i data-lucide="${dayInfo.icon}" class="w-14 h-14 ${dayInfo.color} drop-shadow-md shrink-0"></i>
             </div>
-            <div class="flex flex-col items-end shrink-0">
-              <div class="flex gap-2 text-sm font-black">
+            <div class="flex flex-col items-end shrink-0 gap-1.5">
+              <div class="flex gap-2.5 text-lg font-black">
                 <span class="text-white">${maxTemp}°</span>
                 <span class="text-gray-500">${minTemp}°</span>
               </div>
-              <div class="flex items-center gap-0.5 mt-0.5 text-[10px] font-black text-indigo-400">
-                <i data-lucide="droplet" class="w-3 h-3"></i>
+              <div class="flex items-center gap-1 text-xs font-black text-indigo-400">
+                <i data-lucide="droplet" class="w-3.5 h-3.5"></i>
                 <span>${precipProb}%</span>
               </div>
             </div>
@@ -438,7 +449,8 @@
         const layer = L.tileLayer(radarTileUrl, {
           opacity: 0,
           zIndex: 200,
-          maxZoom: 19
+          minZoom: 2,
+          maxZoom: 16
         });
 
         radarLayers[idx] = layer;

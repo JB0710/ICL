@@ -114,7 +114,7 @@ cat << CONFIG > "$INSTALL_DIR/config.json"
   "longitude": $USER_LON,
   "locationName": "$USER_LOC_NAME",
   "units": "$USER_UNITS",
-  "radarZoom": 8,
+  "radarZoom": 5,
   "updateIntervalMinutes": 10
 }
 CONFIG
