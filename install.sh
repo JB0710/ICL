@@ -30,6 +30,53 @@ log "Starting Weather Radar & Forecast App Installation for Raspberry Pi 5"
 log "Installing to directory: $INSTALL_DIR"
 log "Running as user: $REAL_USER (Home: $REAL_HOME)"
 
+# -------------------------------------------------------------
+# INTERACTIVE LOCATION SETUP
+# -------------------------------------------------------------
+echo "================================================================="
+echo "                  LOCATION & PREFERENCES SETUP"
+echo "================================================================="
+echo "Please enter details for your location to configure your weather radar."
+echo "If you press ENTER, the default value in brackets [like this] will be used."
+echo ""
+
+# Prompt for Location Name
+read -p "Enter Location Name (e.g., Seattle, WA) [New York, NY]: " USER_LOC_NAME
+if [ -z "$USER_LOC_NAME" ]; then
+    USER_LOC_NAME="New York, NY"
+fi
+
+# Prompt for Latitude
+read -p "Enter Latitude (e.g., 47.6062) [40.7128]: " USER_LAT
+if [ -z "$USER_LAT" ]; then
+    USER_LAT="40.7128"
+fi
+
+# Prompt for Longitude
+read -p "Enter Longitude (e.g., -122.3321) [-74.0060]: " USER_LON
+if [ -z "$USER_LON" ]; then
+    USER_LON="-74.0060"
+fi
+
+# Prompt for Units
+read -p "Enter Units (imperial/metric) [imperial]: " USER_UNITS
+if [ -z "$USER_UNITS" ]; then
+    USER_UNITS="imperial"
+else
+    USER_UNITS=$(echo "$USER_UNITS" | tr '[:upper:]' '[:lower:]')
+    if [ "$USER_UNITS" != "imperial" ] && [ "$USER_UNITS" != "metric" ]; then
+        warn "Invalid units. Defaulting to imperial."
+        USER_UNITS="imperial"
+    fi
+fi
+
+log "Configuration selected:"
+echo "  Location Name: $USER_LOC_NAME"
+echo "  Latitude:      $USER_LAT"
+echo "  Longitude:     $USER_LON"
+echo "  Units:         $USER_UNITS"
+echo "================================================================="
+
 # 1. Update system and install required packages
 log "Updating package list and installing dependencies..."
 sudo apt-get update -y || warn "apt-get update failed, attempting to proceed anyway"
@@ -52,14 +99,25 @@ mkdir -p "$INSTALL_DIR"
 
 if [ -f "weather-app/index.html" ]; then
     cp "weather-app/index.html" "$INSTALL_DIR/"
-    cp "weather-app/config.json" "$INSTALL_DIR/"
 elif [ -f "index.html" ]; then
     cp "index.html" "$INSTALL_DIR/"
-    cp "config.json" "$INSTALL_DIR/"
 else
-    error "Source files index.html / config.json not found in current directory!"
+    error "Source files index.html not found in current directory!"
     exit 1
 fi
+
+# Generate customized config.json based on user inputs
+log "Generating customized config.json..."
+cat << CONFIG > "$INSTALL_DIR/config.json"
+{
+  "latitude": $USER_LAT,
+  "longitude": $USER_LON,
+  "locationName": "$USER_LOC_NAME",
+  "units": "$USER_UNITS",
+  "radarZoom": 8,
+  "updateIntervalMinutes": 10
+}
+CONFIG
 
 sudo chown -R $REAL_USER:$REAL_USER "$INSTALL_DIR"
 
