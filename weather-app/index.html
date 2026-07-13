@@ -128,12 +128,12 @@
               <span id="current-temp" class="text-4xl font-black leading-none">--</span>
               <span id="temp-unit-symbol" class="text-lg font-black ml-0.5 text-gray-400">°F</span>
             </div>
-            <p id="current-condition-text" class="text-sm font-bold text-gray-300">Loading...</p>
+            <p id="current-condition-text" class="text-xs font-bold text-gray-300">Loading...</p>
           </div>
         </div>
       </div>
 
-      <!-- Quick Metrics Grid (Larger font/icons for TVs) -->
+      <!-- Quick Metrics Grid -->
       <div class="flex gap-6">
         <div class="flex items-center gap-3 bg-gray-900/40 px-4 py-2 rounded-xl border border-gray-800/50">
           <i data-lucide="droplets" class="w-7 h-7 text-blue-400"></i>
@@ -166,30 +166,30 @@
       </div>
     </div>
 
-    <!-- 5-Day Forecast horizontal display (Cards enlarged for high-vis TV digital signage) -->
+    <!-- 5-Day Forecast horizontal display (Cards enlarged for high-vis TV digital signage with exactly 5px top & bottom padding) -->
     <div id="forecast-cards" class="grid grid-cols-5 gap-4 pt-2 flex-grow items-center">
       <!-- Cards will be populated dynamically -->
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
         <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
         <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
         <div class="h-6 w-24 bg-gray-800 rounded"></div>
       </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
         <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
         <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
         <div class="h-6 w-24 bg-gray-800 rounded"></div>
       </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
         <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
         <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
         <div class="h-6 w-24 bg-gray-800 rounded"></div>
       </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
         <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
         <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
         <div class="h-6 w-24 bg-gray-800 rounded"></div>
       </div>
-      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
+      <div class="bg-gray-900/30 border border-gray-800/50 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-center animate-pulse h-[140px]">
         <div class="h-6 w-16 bg-gray-800 rounded mb-3"></div>
         <div class="h-12 w-12 bg-gray-800 rounded-full mb-3"></div>
         <div class="h-6 w-24 bg-gray-800 rounded"></div>
@@ -354,8 +354,8 @@
           const precipProb = daily.precipitation_probability_max[i] || 0;
 
           const card = document.createElement("div");
-          // Enlarged layouts, paddings, margins, flexbox, text alignments and icons for TV display
-          card.className = "bg-gray-900/50 border border-gray-800 rounded-2xl p-4 flex flex-col items-center justify-between text-center backdrop-blur-md shadow-lg transition-all hover:border-gray-700 h-[210px] w-full";
+          // Exact 5px top & bottom padding with py-[5px] and px-4
+          card.className = "bg-gray-900/50 border border-gray-800 rounded-2xl py-[5px] px-4 flex flex-col items-center justify-between text-center backdrop-blur-md shadow-lg transition-all hover:border-gray-700 h-[210px] w-full";
           card.innerHTML = `
             <span class="text-lg font-black text-blue-400 uppercase tracking-widest">${dayName}</span>
             <div class="my-2.5 flex flex-col items-center">
