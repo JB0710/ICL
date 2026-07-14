@@ -1,0 +1,25 @@
+[Tue Jun  2 13:39:45 2026] PHP 8.3.6 Development Server (http://localhost:8080) started
+[Tue Jun  2 13:39:48 2026] [::1]:33940 Accepted
+[Tue Jun  2 13:39:48 2026] [::1]:33940 [200]: GET /index_mock.php
+[Tue Jun  2 13:39:48 2026] [::1]:33940 Closing
+[Tue Jun  2 13:39:48 2026] [::1]:33944 Accepted
+[Tue Jun  2 13:39:48 2026] [::1]:33944 [200]: GET /css/style.css
+[Tue Jun  2 13:39:48 2026] [::1]:33944 Closing
+[Tue Jun  2 13:39:48 2026] [::1]:33952 Accepted
+[Tue Jun  2 13:39:48 2026] [::1]:33952 [200]: GET /add_mock.php
+[Tue Jun  2 13:39:48 2026] [::1]:33952 Closing
+[Tue Jun  2 13:39:48 2026] [::1]:33962 Accepted
+[Tue Jun  2 13:39:48 2026] [::1]:33962 [200]: GET /css/style.css
+[Tue Jun  2 13:39:48 2026] [::1]:33962 Closing
+[Tue Jun  2 13:39:49 2026] [::1]:33968 Accepted
+[Tue Jun  2 13:39:49 2026] [::1]:33968 [200]: GET /index_mock.php
+[Tue Jun  2 13:39:49 2026] [::1]:33968 Closing
+[Tue Jun  2 13:39:49 2026] [::1]:33970 Accepted
+[Tue Jun  2 13:39:49 2026] [::1]:33970 [200]: GET /css/style.css
+[Tue Jun  2 13:39:49 2026] [::1]:33970 Closing
+[Tue Jun  2 13:39:49 2026] [::1]:33974 Accepted
+[Tue Jun  2 13:39:49 2026] [::1]:33974 [200]: GET /add_mock.php
+[Tue Jun  2 13:39:49 2026] [::1]:33974 Closing
+[Tue Jun  2 13:39:49 2026] [::1]:33986 Accepted
+[Tue Jun  2 13:39:49 2026] [::1]:33986 [200]: GET /css/style.css
+[Tue Jun  2 13:39:49 2026] [::1]:33986 Closing
